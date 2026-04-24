@@ -1,0 +1,20 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Show one Book{% endblock title %}
+
+{% block content %}
+<a href="{% url 'books.list_books' %}">Go Back</a>
+
+<h1>Details of Book1</h1>
+<h2>Internet & World Wide Web How to Program</h2>
+<h2>Author: author name</h2>
+
+<p>
+    <strong>Internet & World Wide Web How to Program</strong>
+    provides a clear and simple introduction to web programming.
+</p>
+
+<img src="{% static 'book1.jpg' %}" alt="Book1" width="200" height="200"> <!-- Django يتحكم بالروابط بدل ما نكتبها يدوي
+يجيب الصور وCSS من المكان الصحيح-->
+{% endblock content %}

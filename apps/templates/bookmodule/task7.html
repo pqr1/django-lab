@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Task 7 {% endblock title %}
+
+{% block content %}
+
+<h2>Students per City</h2>
+
+{% for row in data %}
+City: {{ row.address__city }} - Students: {{ row.total }}
+<hr>
+{% endfor %}
+
+{% endblock content %}

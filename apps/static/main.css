@@ -1,0 +1,57 @@
+.link1, .link2, #link3 {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    text-decoration: underline;
+}
+
+.link1 {
+    background-color: lightgreen;
+    color: red;
+}
+
+.link2 {
+    background-color: dimgray;
+    color: gold;
+}
+
+#link3 {
+    background-color: black;
+    color: white;
+}
+
+.link1:hover, .link2:hover, #link3:hover {
+    background-color: lightblue;
+}
+
+.link1:visited, .link2:visited, #link3:visited {
+    color: purple;
+}
+
+.link1:active, .link2:active, #link3:active {
+    color: orange;
+}
+
+.format-title {
+    background-color: rgb(223, 223, 215);
+    color: green;
+    padding: 10px;
+}
+
+.list-title {
+    background-color: cadetblue;
+    color: white;
+    padding: 10px;
+}
+
+table, th, td {
+    border: 1px solid gray;
+    border-collapse: collapse;
+    text-align: center;
+    padding: 5px;
+}
+
+.desert-img {
+    width: 150px;
+    height: auto;
+}

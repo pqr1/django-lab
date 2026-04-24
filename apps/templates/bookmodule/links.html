@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Links Page</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}"> 
+    <meta charset="UTF-8">
+</head>
+<body>
+
+    <a class="link1" href="https://qu.edu.sa" target="_blank">
+        Go to QU website (open a new tab)
+    </a>
+
+    <a class="link2" href="https://qu.edu.sa">
+        Go to QU website (open in the same page/tab)
+    </a>
+
+    <a id="link3" href="https://qu.edu.sa">
+        Go to QU website (open in the same page/tab)
+    </a>
+
+</body>
+</html>
+<!--
+ استخدمت CSS خارجي (main.css) لتنسيق الروابط
+ استخدمت class للروابط الأولى والثانية (link1, link2)
+ استخدمنا id للرابط الثالث (link3) لتوضيح الفرق بين class و id
+ طبقنا خصائص CSS مثل:
+    display: block  لجعل الرابط يأخذ سطر كامل
+    text-align: center  لتوسيط النص
+    padding  لإعطاء مسافة داخلية
+ أضفنا تأثيرات:
+    hover  عند المرور بالماوس
+    visited  بعد زيارة الرابط
+    active  عند الضغط
+
+-->
