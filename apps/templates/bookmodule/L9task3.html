@@ -1,0 +1,12 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<h2>Publishers and Oldest Book Date</h2>
+
+{% for p in publishers %}
+Name: {{ p.name }} <br>
+Oldest Book Date: {% if p.oldest_date %}{{ p.oldest_date }}{% else %}No Data{% endif %} <br>
+<hr>
+{% endfor %}
+
+{% endblock %}

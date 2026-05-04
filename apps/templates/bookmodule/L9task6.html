@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<h2>book count</h2>
+{% for p in publishers %}
+    <h3>{{ p.name }}</h3>
+
+    Filtered Books:
+    {{ p.filtered_books }}
+
+    <hr>
+{% endfor %}
+
+{% endblock %}

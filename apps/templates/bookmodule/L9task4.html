@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<h2>average, min, and max price of books</h2>
+{% for p in publishers %}
+    <h3>{{ p.name }}</h3>
+
+    Avg Price:
+    {% if p.avg_price %}
+        {{ p.avg_price |floatformat:2}}
+    {% else %}
+        No Data
+    {% endif %}
+
+    <br>
+
+    Min Price:
+    {% if p.min_price %}
+        {{ p.min_price }}
+    {% else %}
+        No Data
+    {% endif %}
+
+    <br>
+
+    Max Price:
+    {% if p.max_price %}
+        {{ p.max_price }}
+    {% else %}
+        No Data
+    {% endif %}
+
+    <hr>
+{% endfor %}
+
+{% endblock %}

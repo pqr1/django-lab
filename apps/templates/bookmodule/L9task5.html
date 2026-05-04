@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<h2>higher rate</h2>
+
+{% for p in publishers %}
+    <h3>{{ p.name }}</h3>
+
+    Highly Rated Books:
+    {{ p.high_books }}
+
+    <br>
+    Book Name: {{ p.book_name }}
+    <br>
+    Quantity:
+    {{ p.total_quantity }}
+
+    <hr>
+{% endfor %}
+
+{% endblock %}

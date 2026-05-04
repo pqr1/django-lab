@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Q
-from django.db.models import Count, Sum, Avg, Max, Min
+from django.db.models import Count, Sum, Avg, Max, Min, FloatField, ExpressionWrapper, F
 from django.db.models import Count
-from .models import Book, Student, Address
+from .models import Book, Publisher, Student, Address
+from django.db.models.functions import TruncDate
+
 def search(request): #Lab6 نستقبل طلب من المستخدم request
     return render(request, 'bookmodule/search.html')# render نقول للنظام اعرض صفحة HTML 
 
@@ -18,15 +20,15 @@ def simple_query(request):
     return render(request, 'bookmodule/bookList.html', {'books': mybooks})
 
 def complex_query(request):
-    mybooks=books=Book.objects.filter(author__isnull = False).filter(title__icontains='and').filter(edition__gte = 2).exclude(price__lte = 10)[:10] #سويت شرط
+    mybooks=books=Book.objects.filter(author__isnull = False).filter(title__icontains='and').filter(editiongte = 2).exclude(price__lte = 10)[:10] #سويت شرط
     if len(mybooks)>=1:
-        return render(request, 'bookmodule/bookList.html', {'books':mybooks}) # اذا لقى كتاب على الاقل يوديه لصفحة الكتب
+        return render(request, 'bookmodule/bookList.html', {'books':mybooks}) # اذا لقى كتاب على الاقل يوديلصفحة الكتب
     else:
         return render(request, 'bookmodule/index.html') # اذا ما لقى يروح للصفحة الرئيسية
 
 
 
-#Lab8////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#Lab8//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 def task1(request):
@@ -123,7 +125,65 @@ def aboutus(request):
 def index2(request, val1=0):
     return HttpResponse("value1 = " + str(val1))
 
+#/////////////////////////Lab9///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
+def L9task1(request):
+    total_books = Book.objects.aggregate(total=Sum('quantity'))['total'] #بيحسب لي مجموع الكمية الموجودة في كل الكتب
+
+    books = Book.objects.annotate( #annotate نستخدمها عشان نضيف قيمة محسوبة لكل صف.
+        percentage=ExpressionWrapper(
+            (F('quantity') * 100.0) / total_books,
+            output_field=FloatField() #بيحسب لي النسبة المئوية لكل كتاب من حيث الكمية مقارنة بالمجموع الكلي للكمية
+        )
+    )
+
+    return render(request, 'bookmodule/L9task.html', {'books': books}) 
+
+def L9task2(request):
+    publishers = Publisher.objects.annotate( #بيحسب لي مجموع الكمية الموجودة في كل الكتب المرتبطة بكل ناشر
+        total_stock=Sum('book__quantity')
+    )
+
+    return render(request, 'bookmodule/L9task2.html', {'publishers': publishers})
+
+
+
+def L9task3(request):
+    publishers = Publisher.objects.annotate( #بيحسب لي اقدم تاريخ نشر لكل كتاب مرتبط بكل ناشر
+        oldest_date=Min('book__pubdate') 
+    ).distinct()#distinct() بيضمن لي ان كل ناشر يظهر مرة واحدة فقط في النتيجة حتى لو كان لديه عدة كتب بنفس تاريخ النشر الأقدم
+    return render(request, 'bookmodule/L9task3.html', {'publishers': publishers})
+
+
+def L9task4(request):
+    publishers = Publisher.objects.annotate(
+        avg_price=Avg('book__price'),
+        min_price=Min('book__price'),
+        max_price=Max('book__price')
+    )#بيحسب لي متوسط السعر وأقل سعر وأعلى سعر لكل كتاب مرتبط بكل ناشر
+
+    return render(request, 'bookmodule/L9task4.html', {'publishers': publishers})
+
+
+
+
+
+
+def L9task5(request):
+    publishers = Publisher.objects.annotate(
+        book_name=Max('book__title', filter=Q(book__rating__gte=30)),
+        high_books=Count('book', filter=Q(book__rating__gte=30)),#نستخدمها عشان نكتب شروط داخل الاستعلامQ .
+        total_quantity=Sum('book__quantity', filter=Q(book__rating__gte=30))
+    )#بيحسب لي اسم الكتاب الذي حصل على أعلى تقييم (rating) لكل ناشر، وعدد الكتب التي حصلت على تقييم 30 أو أعلى، ومجموع الكمية لهذه الكتب المرتبطة بكل ناشر.
+
+    return render(request, 'bookmodule/L9task5.html', {'publishers': publishers})
+
+def L9task6(request):
+    publishers = Publisher.objects.annotate(
+        filtered_books=Count('book',
+        filter=Q(book__price__gt=50,book__quantity__lt=5,book__quantity__gte=1))) #بيحسب لي عدد الكتب المرتبطة بكل ناشر والتي تفي بالشروط التالية: سعر الكتاب أكبر من 50، كمية الكتاب أقل من 5، وكمية الكتاب أكبر من أو تساوي 1.
+
+    return render(request, 'bookmodule/L9task6.html', {'publishers': publishers})

@@ -1,0 +1,12 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<h2>Publishers and Total Stock</h2>
+
+{% for p in publishers %}
+Name: {{ p.name }} <br>
+Total Stock: {{ p.total_stock }} <br>
+<hr>
+{% endfor %}
+
+{% endblock %}
