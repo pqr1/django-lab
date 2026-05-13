@@ -1,9 +1,11 @@
 from django.http import HttpResponse
+from .forms import BookForm
+from django.shortcuts import redirect
 from django.shortcuts import render
 from django.db.models import Q
 from django.db.models import Count, Sum, Avg, Max, Min, FloatField, ExpressionWrapper, F
 from django.db.models import Count
-from .models import Book, Publisher, Student, Address
+from .models import Book, Publisher, Student, Address, Books
 from django.db.models.functions import TruncDate
 
 def search(request): #Lab6 نستقبل طلب من المستخدم request
@@ -187,3 +189,110 @@ def L9task6(request):
         filter=Q(book__price__gt=50,book__quantity__lt=5,book__quantity__gte=1))) #بيحسب لي عدد الكتب المرتبطة بكل ناشر والتي تفي بالشروط التالية: سعر الكتاب أكبر من 50، كمية الكتاب أقل من 5، وكمية الكتاب أكبر من أو تساوي 1.
 
     return render(request, 'bookmodule/L9task6.html', {'publishers': publishers})
+
+
+
+
+
+#/////////////////////////Lab10 part1///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+def listbooks(request):
+    books = Books.objects.all() #بيجيب لي كل الكتب الموجودة في قاعدة البيانات ويخزنها في المتغير books
+
+    return render(request, 'bookmodule/listbooks.html', {'books': books})
+
+
+def addbook(request):
+
+    if request.method == 'POST':#بيتحقق إذا كان الطلب الذي تم إرساله من النموذج في صفحة HTML هو طلب POST، مما يعني أن المستخدم قام بإرسال بيانات جديدة لإضافة كتاب جديد.
+
+        book = Books(
+            title=request.POST['title'],
+            author=request.POST['author'],
+            price=request.POST['price'],
+            edition=request.POST['edition']
+        )#بينشئ لي كائن جديد من نوع Books ويملأ الحقول الخاصة به بالقيم التي تم إرسالها من النموذج في صفحة HTML باستخدام request.POST. بعد ذلك، يتم حفظ هذا الكائن في قاعدة البيانات باستخدام book.save().
+
+        book.save()
+        return redirect('/books/lab10_part1/listbooks')
+
+
+    return render(request, 'bookmodule/addbook.html')
+
+
+
+def editbook(request, id):
+
+    book = Books.objects.get(id=id) #يجيب الكتاب المطلوب
+
+    if request.method == 'POST':
+
+        book.title = request.POST['title']
+        book.author = request.POST['author']
+        book.price = request.POST['price']
+        book.edition = request.POST['edition']
+
+        book.save()
+        return redirect('/books/lab10_part1/listbooks')
+    return render(request, 'bookmodule/editbook.html', {'book': book})
+
+
+def deletebook(request, id):
+
+    book = Books.objects.get(id=id)
+
+    book.delete()
+
+    return redirect('/books/lab10_part1/listbooks')
+
+
+#/////////////////////////Lab10 part2///////////////////////////////////////////////////////////////////////////////////////////////////////////
+def listbooks2(request):
+
+    books = Books.objects.all()
+
+    return render(request, 'bookmodule/listbooks2.html', {'books': books})
+
+
+
+def addbook2(request):
+
+    if request.method == 'POST':
+
+        form = BookForm(request.POST)
+
+        if form.is_valid():#يتحقق من صحة البيانات
+            form.save()
+            return redirect('/books/lab10_part2/listbooks')
+    else:
+        form = BookForm()
+
+    return render(request, 'bookmodule/addbook2.html', {'form': form})
+
+
+
+def editbook2(request, id):
+
+    book = Books.objects.get(id=id)
+
+    if request.method == 'POST':
+
+        form = BookForm(request.POST, instance=book)#يعدل نفس السجل
+
+        if form.is_valid():
+            form.save()
+            return redirect('/books/lab10_part2/listbooks')
+    else:
+        form = BookForm(instance=book)
+
+    return render(request, 'bookmodule/editbook2.html', {'form': form})
+
+
+
+def deletebook2(request, id):
+
+    book = Books.objects.get(id=id)
+
+    book.delete()
+
+    return redirect('/books/lab10_part2/listbooks')

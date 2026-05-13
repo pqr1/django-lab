@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<h2>Book List Using Forms</h2>
+
+<a href="/books/lab10_part2/addbook">
+    Add New Book
+</a>
+
+<hr>
+
+{% for b in books %}
+
+ID: {{ b.id }}<br>
+
+Title: {{ b.title }}<br>
+
+Author: {{ b.author }}<br>
+
+Price: {{ b.price }}<br>
+
+Edition: {{ b.edition }}<br>
+<br>
+
+<a href="/books/lab10_part2/editbook/{{ b.id }}">Edit</a>
+
+|
+
+<a href="/books/lab10_part2/deletebook/{{ b.id }}">Delete</a>
+
+<hr>
+
+{% endfor %}
+
+{% endblock %}
